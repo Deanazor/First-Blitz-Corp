@@ -1,0 +1,11 @@
+user,ref_code,items,start_date,ordered_date,ordered,shipping_address,billing_address,payment,coupon ,being_delivered,received,refund_requested,refund_granted
+efootef,7bgn1,zpallyd,12/02/2020,04/01/2020,False,7704 Cascade Hill,23 Ryan Street,5st3b,b4au,False,False,False,False
+kseatterj,bb3t4,gerbain9,06/02/2020,14/07/2020,False,2 Londonderry Plaza,098 Havey Plaza,empub,35nc,False,True,False,False
+roldham0,aysdc,frulei,01/06/2020,04/06/2020,True,2 Londonderry Plaza,042 Erie Trail,ufpb2,b4au,True,False,False,False
+davison4,h6l1h,svearncombee,10/12/2019,26/01/2020,False,31702 Acker Junction,042 Erie Trail,s0e04,be1o,False,True,False,True
+mstanborough5,7x763,lgarrie7,19/02/2020,23/02/2020,False,23 Ryan Street,098 Havey Plaza,s0e04,be1o,True,False,True,False
+mivashkinb,6qemg,roldham0,23/03/2020,24/08/2020,False,042 Erie Trail,23 Ryan Street,empub,b4au,True,True,False,False
+davison4,8cr5m,zpallyd,01/12/2019,08/11/2020,True,31702 Acker Junction,2 Londonderry Plaza,empub,6jf9,True,True,True,False
+kseatterj,ia7k5,mstanborough5,03/11/2020,28/12/2019,True,769 Grim Avenue,098 Havey Plaza,uumve,b4au,False,True,True,False
+mreinerh,7xodj,lgarrie7,05/03/2020,17/05/2020,True,48394 Roxbury Center,042 Erie Trail,uumve,8lyj,False,True,True,False
+mstanborough5,ddoxb,svearncombee,04/12/2019,19/07/2020,False,3 Golf Pass,098 Havey Plaza,a24k5,0i4s,True,True,False,True
