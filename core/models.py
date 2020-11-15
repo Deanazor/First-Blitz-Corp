@@ -41,7 +41,7 @@ class Item(models.Model):
     # discount_price = models.FloatField(blank=True, null=True)
     price = MoneyField(max_digits=14, decimal_places=0, default_currency="IDR")
     discount_price = MoneyField(
-        max_digits=14, decimal_places=0, default_currency="IDR")
+        max_digits=14, decimal_places=2, default_currency="IDR")
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
     label = models.CharField(choices=LABEL_CHOICES, max_length=1)
     slug = models.SlugField()

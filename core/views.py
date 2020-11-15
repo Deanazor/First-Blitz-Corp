@@ -537,13 +537,72 @@ class UserUpload(View):
             one_click_purchasing=row['one_click_purchasing']
          )
          for row in list_of_dict
-     ]
+        ]
         try:
             msg = UserProfile.objects.bulk_create(objs)
-            returnmsg = {"status_code": 200}
+            returnmsg = "Upload Berhasil"
             print('imported successfully')
         except Exception as e:
             print('Error While Importing Data: ',e)
-            returnmsg = {"status_code": 500}
+            returnmsg = "Upload gagal"
+       
+        return HttpResponse(returnmsg)
+
+class CouponUpload(View):
+    def get(self, request):
+        template_name = 'importfile.html'
+        return render(request, template_name)
+        
+    def post(self, request):
+        user = request.user #get the current login user details
+        paramFile = io.TextIOWrapper(request.FILES['employeefile'].file)
+        portfolio1 = csv.DictReader(paramFile)
+        list_of_dict = list(portfolio1)
+        objs = [
+            Coupon(
+            code=row['code'],
+            amount=row['amount']
+         )
+         for row in list_of_dict
+        ]
+        try:
+            msg = Coupon.objects.bulk_create(objs)
+            returnmsg = "Upload Berhasil"
+            print('imported successfully')
+        except Exception as e:
+            print('Error While Importing Data: ',e)
+            returnmsg = "Upload gagal"
+       
+        return HttpResponse(returnmsg)
+
+class ItemUpload(View):
+    def get(self, request):
+        template_name = 'importfile.html'
+        return render(request, template_name)
+        
+    def post(self, request):
+        user = request.user #get the current login user details
+        paramFile = io.TextIOWrapper(request.FILES['employeefile'].file)
+        portfolio1 = csv.DictReader(paramFile)
+        list_of_dict = list(portfolio1)
+        objs = [
+         Item(
+            title=row['title'],
+            price=row['price'],
+            discount_price=row['discount_price'],
+            category=row['category'],
+            label=row['label'],
+            slug=row['slug'],
+            description=row['description']
+         )
+         for row in list_of_dict
+        ]
+        try:
+            msg = Item.objects.bulk_create(objs)
+            returnmsg = "Upload Berhasil"
+            print('imported successfully')
+        except Exception as e:
+            print('Error While Importing Data: ',e)
+            returnmsg = "Upload gagal"
        
         return HttpResponse(returnmsg)
