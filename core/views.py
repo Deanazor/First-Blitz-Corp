@@ -1,6 +1,8 @@
 import random
 import string
-
+import io
+import csv
+from django.http.response import HttpResponse
 import stripe
 from django.conf import settings
 from django.contrib import messages
@@ -517,3 +519,31 @@ class RequestRefundView(View):
             except ObjectDoesNotExist:
                 messages.info(self.request, "This order does not exist.")
                 return redirect("core:request-refund")
+
+class UserUpload(View):
+    def get(self, request):
+        template_name = 'importfile.html'
+        return render(request, template_name)
+        
+    def post(self, request):
+        user = request.user #get the current login user details
+        paramFile = io.TextIOWrapper(request.FILES['employeefile'].file)
+        portfolio1 = csv.DictReader(paramFile)
+        list_of_dict = list(portfolio1)
+        objs = [
+            UserProfile(
+            user=row['user'],
+            stripe_customer_id=row['stripe_customer_id'],
+            one_click_purchasing=row['one_click_purchasing']
+         )
+         for row in list_of_dict
+     ]
+        try:
+            msg = UserProfile.objects.bulk_create(objs)
+            returnmsg = {"status_code": 200}
+            print('imported successfully')
+        except Exception as e:
+            print('Error While Importing Data: ',e)
+            returnmsg = {"status_code": 500}
+       
+        return HttpResponse(returnmsg)
