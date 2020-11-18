@@ -5,6 +5,7 @@ from django.db.models import Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 from djmoney.models.fields import MoneyField
+from djmoney.money import maybe_convert
 
 CATEGORY_CHOICES = (
     ('N', 'Non-sweet'),
@@ -24,6 +25,16 @@ ADDRESS_CHOICES = (
     ('S', 'Shipping'),
 )
 
+TRANSPORT_CHOICES = (
+    ('R', 'Regular'),
+    ('F', 'Fast'),
+    ('VF', 'Very Fast'),
+)
+
+SELLER_CHOICES = (
+    ('N', 'Normal'),
+    ('P', 'Premium')
+)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(
@@ -39,6 +50,7 @@ class Item(models.Model):
     title = models.CharField(max_length=100)
     # price = models.FloatField()
     # discount_price = models.FloatField(blank=True, null=True)
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
     price = MoneyField(max_digits=14, decimal_places=0, default_currency="IDR")
     discount_price = MoneyField(
         max_digits=14, decimal_places=2, default_currency="IDR")
@@ -98,9 +110,12 @@ class Order(models.Model):
     ref_code = models.CharField(max_length=20, blank=True, null=True)
     print("OrderItem")
     items = models.ManyToManyField(OrderItem)
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
+    shipping_service = models.CharField(max_length=1, choices=TRANSPORT_CHOICES)
+    shipping_provider = models.ForeignKey(Transport, on_delete=models.CASCADE)
     shipping_address = models.ForeignKey(
         'Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
     billing_address = models.ForeignKey(
@@ -113,6 +128,7 @@ class Order(models.Model):
     received = models.BooleanField(default=False)
     refund_requested = models.BooleanField(default=False)
     refund_granted = models.BooleanField(default=False)
+    satus = models.CharField(max_length=20, blank=True)
 
     '''
     1. Item added to cart
@@ -182,6 +198,26 @@ class Refund(models.Model):
     def __str__(self):
         return f"{self.pk}"
 
+class BlitzPay(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    saldo = MoneyField(max_digits=14, decimal_places=0, default_currency="IDR")
+
+    def __str__(self):
+        return self.user.username
+
+class Seller(models.Model):
+    seller = models.CharField(max_length=64)
+    rating = models.CharField(max_length=1, choices=SELLER_CHOICES)
+
+    def __str__(self):
+        return self.seller
+
+class Transport(models.Model):
+    transport = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.transport
 
 def userprofile_receiver(sender, instance, created, *args, **kwargs):
     if created:
