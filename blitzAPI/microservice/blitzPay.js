@@ -17,7 +17,7 @@ module.exports = {
     topUpAccount: function(connection, username, amount) {
         return new Promise(function(resolve, reject) {
 
-            connection.query('UPDATE `blitz`.`blitz_pay_saldo` SET `balance`=`balance`+? WHERE `username`=?;',[amount, username], function (err, rows, fields) {
+            connection.query("UPDATE `blitz1`.`core_blitzpay` SET `saldo`=`saldo`+? WHERE `user_id`=(SELECT `id` FROM `auth_user` WHERE `blitz1`.`auth_user`.`username`=?);",[amount, username], function (err, rows, fields) {
                 if (err) {
                     return reject('Internal Server Error');
                 }
@@ -32,13 +32,12 @@ module.exports = {
     },
     payment: function(connection, username, password, amount) {
         return new Promise(function(resolve, reject) {
-
             connection.query('SELECT `password` FROM auth_user WHERE `username`=?;', [username], function (err, result) {
                 if (err) {
-                    return reject('Internal Server Error');
+                    return reject('Internal Server Error 1');
                 }
                 if(result.length == 0){
-                    reject('Error occurred, username do not exists')
+                    return reject('Error occurred, username do not exists')
                 }
                 
                 original = result[0]['password']
@@ -48,15 +47,16 @@ module.exports = {
 
                 if(authentication){
                     //cek dana cukup
-                    connection.query('SELECT balance FROM `blitz_pay_saldo` WHERE `username`=?;',[username], function (err, result) {
+                    connection.query('SELECT saldo FROM `core_blitzpay` WHERE `user_id`=(SELECT `id` FROM `auth_user` WHERE `blitz1`.`auth_user`.`username`=?);',[username], function (err, result) {
+                        console.log(result)
                         if (err) {
                             return reject('Internal Server Error');
                         }
 
-                        if(result[0]['balance'] < amount){
-                            return reject('Current Balance '+result[0]['balance']+' not enough.');
+                        if(result[0]['saldo'] < amount){
+                            return reject('Current Balance '+result[0]['saldo']+' not enough.');
                         } else{
-                            connection.query('UPDATE `blitz`.`blitz_pay_saldo` SET `balance`=`balance`-? WHERE `username`=?;',[amount, username], function (err, rows, fields) {
+                            connection.query("UPDATE `blitz1`.`core_blitzpay` SET `saldo`=`saldo`-? WHERE `user_id`=(SELECT `id` FROM `auth_user` WHERE `blitz1`.`auth_user`.`username`=?);",[amount, username], function (err, rows, fields) {
                                 if (err) {
                                     return reject('Internal Server Error');
                                 }

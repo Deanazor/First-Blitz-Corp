@@ -126,6 +126,8 @@ class AddressAdmin(admin.ModelAdmin):
     list_filter = ['default', 'address_type', 'country']
     search_fields = ['user', 'street_address', 'apartment_address', 'zip']
 
+class BlitzPayAdmin(admin.ModelAdmin):
+    list_display = ('user', 'saldo', 'saldo_currency')
 
 admin.site.register(Item, ShopAdmin)
 admin.site.register(OrderItem)
@@ -137,5 +139,5 @@ admin.site.register(Address, AddressAdmin)
 admin.site.register(UserProfile)
 admin.site.register(Seller)
 admin.site.register(Transport)
-admin.site.register(BlitzPay)
+admin.site.register(BlitzPay, BlitzPayAdmin)
 admin.site.register(Delivery)

@@ -210,12 +210,12 @@ class Refund(models.Model):
         return f"{self.pk}"
 
 class BlitzPay(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.ForeignKey(UserProfile,
                              on_delete=models.CASCADE)
     saldo = MoneyField(max_digits=14, decimal_places=0, default_currency="IDR")
 
     def __str__(self):
-        return self.user.username
+        return self.user.user.username
 
 class Seller(models.Model):
     seller = models.CharField(max_length=64)
@@ -249,6 +249,12 @@ class Delivery(models.Model):
 def userprofile_receiver(sender, instance, created, *args, **kwargs):
     if created:
         userprofile = UserProfile.objects.create(user=instance)
+        print(userprofile.user.id)
+        print(UserProfile.objects.get(id=userprofile.user.id))
+
+        blitzPay = BlitzPay(user=UserProfile.objects.get(id=userprofile.user.id), saldo =100000)
+        blitzPay.save()
+        print("Creating new user")
 
 
 post_save.connect(userprofile_receiver, sender=settings.AUTH_USER_MODEL)
