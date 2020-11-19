@@ -50,7 +50,7 @@ class Item(models.Model):
     title = models.CharField(max_length=100)
     # price = models.FloatField()
     # discount_price = models.FloatField(blank=True, null=True)
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, blank=True, null=True)
     price = MoneyField(max_digits=14, decimal_places=0, default_currency="IDR")
     discount_price = MoneyField(
         max_digits=14, decimal_places=2, default_currency="IDR")
@@ -110,12 +110,12 @@ class Order(models.Model):
     ref_code = models.CharField(max_length=20, blank=True, null=True)
     print("OrderItem")
     items = models.ManyToManyField(OrderItem)
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, blank=True, null=True)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
-    shipping_service = models.CharField(max_length=1, choices=TRANSPORT_CHOICES)
-    shipping_provider = models.ForeignKey(Transport, on_delete=models.CASCADE)
+    shipping_service = models.CharField(max_length=1, choices=TRANSPORT_CHOICES, blank=True, null=True)
+    shipping_provider = models.ForeignKey('Transport', on_delete=models.SET_NULL, blank=True, null=True)
     shipping_address = models.ForeignKey(
         'Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
     billing_address = models.ForeignKey(
@@ -155,7 +155,8 @@ class Order(models.Model):
 
 class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
+                             on_delete=models.CASCADE, blank=True, null=True)
+    seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, blank=True, null=True)
     street_address = models.CharField(max_length=100)
     apartment_address = models.CharField(max_length=100)
     country = CountryField(multiple=False)
@@ -164,7 +165,10 @@ class Address(models.Model):
     default = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.username
+        try:
+            return self.user.username
+        except Exception:
+            return str(self.seller)
 
     class Meta:
         verbose_name_plural = 'Addresses'
@@ -218,6 +222,14 @@ class Transport(models.Model):
 
     def __str__(self):
         return self.transport
+
+class Gatau(models.Model):
+    gatau = models.CharField(max_length=100)
+    ini_juga = models.IntegerField(default=1)
+
+    def __str__(self):
+        return self.gatau
+
 
 def userprofile_receiver(sender, instance, created, *args, **kwargs):
     if created:
