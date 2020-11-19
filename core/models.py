@@ -36,6 +36,13 @@ SELLER_CHOICES = (
     ('P', 'Premium')
 )
 
+DELIVERY_CHOICES = (
+    ('R', 'Received'),
+    ('O', 'On Process'),
+    ('S', 'Shipping'),
+    ('D', 'Delevered')
+)
+
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -223,12 +230,20 @@ class Transport(models.Model):
     def __str__(self):
         return self.transport
 
-class Gatau(models.Model):
-    gatau = models.CharField(max_length=100)
-    ini_juga = models.IntegerField(default=1)
+class Delivery(models.Model):
+    transport = models.ForeignKey('Transport', on_delete=models.SET_NULL, blank=True, null=True)
+    order = models.ForeignKey('Order', on_delete=models.SET_NULL, blank=True, null=True)
+    delivery_address = models.ForeignKey('Address', on_delete=models.SET_NULL, blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, blank=True, null=True)
+    status = models.CharField(max_length=1, choices=DELIVERY_CHOICES)
 
     def __str__(self):
-        return self.gatau
+        return self.status
+    
+    def get_seller_address(self):
+        return Address.objects.get(seller=self.seller)
+
 
 
 def userprofile_receiver(sender, instance, created, *args, **kwargs):

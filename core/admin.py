@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib import messages
 
-from .models import Item, OrderItem, Order, Payment, Coupon, Refund, Address, UserProfile, Seller,Transport, BlitzPay
+from .models import Item, OrderItem, Order, Payment, Coupon, Refund, Address, UserProfile, Seller,Transport, BlitzPay, Delivery
 
 
 def make_refund_accepted(modeladmin, request, queryset):
@@ -138,3 +138,4 @@ admin.site.register(UserProfile)
 admin.site.register(Seller)
 admin.site.register(Transport)
 admin.site.register(BlitzPay)
+admin.site.register(Delivery)
