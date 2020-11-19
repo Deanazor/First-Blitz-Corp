@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Node Js
+blitzAPI/node_modules/
+
 # C extensions
 *.so
 
