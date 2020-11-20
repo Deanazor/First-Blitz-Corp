@@ -37,7 +37,7 @@ module.exports = {
                     return reject('Internal Server Error 1');
                 }
                 if(result.length == 0){
-                    return reject('Error occurred, username do not exists')
+                    return reject('Error occurred, username does not exists')
                 }
                 
                 original = result[0]['password']

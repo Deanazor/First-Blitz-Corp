@@ -21,8 +21,12 @@ app.get('/', (req, res) => {
 
 // Handle Delivery for Transport Company
 app.get('/transport/getdelivery', (req, res) => {
-  console.log(req.query.date);
-  res.send('ok')
+  resi.getOrderDetail(db, req.body['username'], req.body['password'], req.query.date).then((result) =>{
+    res.send(result)
+  }, (result) =>{
+    res.status(500)
+    res.send(result)
+  })
   
 })
 
