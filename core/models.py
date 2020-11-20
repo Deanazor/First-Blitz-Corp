@@ -135,7 +135,7 @@ class Order(models.Model):
     received = models.BooleanField(default=False)
     refund_requested = models.BooleanField(default=False)
     refund_granted = models.BooleanField(default=False)
-    satus = models.CharField(max_length=20, blank=True)
+    satus = models.TextField( blank=True)
 
     '''
     1. Item added to cart

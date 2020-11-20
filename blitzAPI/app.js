@@ -30,6 +30,27 @@ app.get('/transport/getdelivery', (req, res) => {
   
 })
 
+app.post('/transport/updatedelivery', (req, res) => {
+  resi.updateStatus(db, req.body['username'], req.body['password'], req.body['order_id'], req.body['status']).then((result) =>{
+    res.send(result)
+  }, (result) =>{
+    res.status(500)
+    res.send(result)
+  })
+  
+})
+
+
+app.post('/transport/finishdelivery', (req, res) => {
+  resi.finishDelivery(db, req.body['username'], req.body['password'], req.body['order_id'], req.body['status']).then((result) =>{
+    res.send(result)
+  }, (result) =>{
+    res.status(500)
+    res.send(result)
+  })
+  
+})
+
 app.post('/resi', (req, res) =>{
 
 })
