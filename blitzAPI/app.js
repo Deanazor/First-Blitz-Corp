@@ -16,16 +16,13 @@ var blitzPay = require('./microservice/blitzPay.js');
 //hash
 //WW8dGnoWFTsm/63X7fiOhRk2pyfCz9wYppdpWLHCOo0=
 app.get('/', (req, res) => {
-  
+  res.send("Ok")
 })
 
-app.get('/resi', (req, res) => {
-  resi.connectResi(db).then((result) =>{
-    res.send(result)
-  }, (result) =>{
-    res.status(result)
-    res.send("Internal Error")
-  })
+// Handle Delivery for Transport Company
+app.get('/transport/getdelivery', (req, res) => {
+  console.log(req.query.date);
+  res.send('ok')
   
 })
 
@@ -33,7 +30,9 @@ app.post('/resi', (req, res) =>{
 
 })
 
-app.post('/topup', (req, res) =>{
+
+// Handle BlitzPay
+app.post('/blitzpay/topup', (req, res) =>{
   blitzPay.topUpAccount(db, req.body['username'], req.body['amount']).then((result) =>{
     res.send(result)
   }, (result) =>{
@@ -42,7 +41,7 @@ app.post('/topup', (req, res) =>{
   })
 })
 
-app.post('/payment', (req, res) =>{
+app.post('/blitzpay/payment', (req, res) =>{
   blitzPay.payment(db, req.body['username'], req.body['password'], req.body['amount']).then((result) =>{
     res.send(result)
   }, (result) =>{

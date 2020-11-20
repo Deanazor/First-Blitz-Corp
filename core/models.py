@@ -218,6 +218,7 @@ class BlitzPay(models.Model):
         return self.user.user.username
 
 class Seller(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     seller = models.CharField(max_length=64)
     rating = models.CharField(max_length=1, choices=SELLER_CHOICES)
 
@@ -225,6 +226,7 @@ class Seller(models.Model):
         return self.seller
 
 class Transport(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     transport = models.CharField(max_length=64)
 
     def __str__(self):
